@@ -58,4 +58,8 @@ export default class UserStore {
     setImage = (image: string) => {
         this.user && (this.user.image = image);
     }
+
+    setDisplayName = (displayName: string) => {
+        this.user && (this.user.displayName = displayName);
+    }
 }

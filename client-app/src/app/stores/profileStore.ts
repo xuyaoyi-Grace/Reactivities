@@ -90,4 +90,21 @@ export default class ProfileStore {
             console.log(error)
         }
     }
+
+    editProfile = async (profile: Partial<Profile>) => {
+        this.loading = true;
+        try {
+            await agent.Profiles.editProfile(profile)
+            runInAction(() => {
+                if (this.profile) {
+                    this.profile = {...this.profile, ...profile} as Profile;
+                    this.loading = false;
+                }
+            })
+
+        } catch (error) {
+            runInAction(() => this.loading = false)
+            console.log(error)
+        }
+    }
 }

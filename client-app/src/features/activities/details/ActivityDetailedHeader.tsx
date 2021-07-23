@@ -60,14 +60,14 @@ export default observer (function ActivityDetailedHeader({activity}: Props) {
                             onClick={cancelActivityToggle}
                             loading={loading}
                         />
-                        <Button disbaled={activity.isCancelled} as={Link} to={`/manage/${activity.id}`} color='orange' floated='right'>
+                        <Button disabled={activity.isCancelled} as={Link} to={`/manage/${activity.id}`} color='orange' floated='right'>
                             Manage Event
                         </Button>
                     </>
                 ) : activity.isGoing ? (
                     <Button loading={loading} onClick={updateAttendance}>Cancel attendance</Button>
                 ) : (
-                    <Button disbaled={activity.isCancelled} loading={loading} onClick={updateAttendance} color='teal'>Join Activity</Button>
+                    <Button disabled={activity.isCancelled} loading={loading} onClick={updateAttendance} color='teal'>Join Activity</Button>
                 )}
             </Segment>
         </Segment.Group>

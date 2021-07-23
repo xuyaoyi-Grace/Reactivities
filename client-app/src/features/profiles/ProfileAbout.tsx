@@ -9,7 +9,7 @@ interface Props {
     profile: Profile
 }
 export default observer(function ProfileAbout({profile}: Props) {
-    const { profileStore: { isCurrentUser, loading, editProfile} } = useStore();
+    const { profileStore: { isCurrentUser, editProfile} } = useStore();
     const [editMode, setEditMode] = useState(false)
 
     function handleFormSubmit(values: Partial<Profile>) {

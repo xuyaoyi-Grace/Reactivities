@@ -1,6 +1,6 @@
 import { makeAutoObservable, reaction, runInAction } from "mobx";
 import agent from "../api/agent";
-import { Photo, Profile } from "../models/profile";
+import { Photo, Profile, UserActivity } from "../models/profile";
 import { store } from "./store";
 
 export default class ProfileStore {
@@ -10,7 +10,10 @@ export default class ProfileStore {
     loading = false;
     followings: Profile[] = []
     loadingFollowings: boolean = false;
-    activeTab = 0
+    activeTab = 0;
+    predicate:string = 'future';
+    userActivities: UserActivity[] = [];
+    loadingActivities: boolean = false
 
     constructor() {
         makeAutoObservable(this);
@@ -32,11 +35,21 @@ export default class ProfileStore {
         this.activeTab = activeTab
     }
 
+    setProfilePredicate = (predicate: string) => {
+        this.predicate = predicate;
+    }
+
     get isCurrentUser() {
         if (store.userStore.user && this.profile) {
             return store.userStore.user.userName === this.profile.username;
         }
         return false;
+    }
+
+    get axiosProfileParams() {
+        const params = new URLSearchParams();
+        params.append("predicate", this.predicate);
+        return params;
     }
 
     loadProfile = async (username: string) => {
@@ -165,6 +178,21 @@ export default class ProfileStore {
         } catch (error) {
             console.log(error)
             runInAction(() => this.loadingFollowings = false)
+        }
+    }
+
+    loadUserActivities = async (username: string) => {
+        this.loadingActivities = true;
+        try {
+            const userActivities = await agent.Profiles.getUserActivities(username, this.axiosProfileParams);
+            runInAction(() => {
+                this.userActivities = userActivities;
+                this.loadingActivities = false;
+            })
+            
+        } catch (error) {
+            console.log(error)
+            runInAction(() => this.loadingActivities = false)
         }
     }
 }
